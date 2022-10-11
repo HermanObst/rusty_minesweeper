@@ -31,37 +31,7 @@ fn count_mines(board_matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     for (i, row) in board_matrix.iter().enumerate() {
         let mut counted_row = Vec::new();
         for (j, col) in row.iter().enumerate() {
-            let mut count = 0;
-            if *col == '*' {
-                counted_row.push(0_usize);
-            } else {
-                for off_i in [-1_isize, 0, 1] {
-                    for off_j in [-1_isize, 0, 1] {
-                        match (
-                            usize::try_from((i as isize) + off_i),
-                            usize::try_from((j as isize) + off_j),
-                        ) {
-                            (Ok(idx_i), Ok(idx_j)) => match board_matrix.get(idx_i) {
-                                Some(row) => match row.get(idx_j) {
-                                    Some(char) => {
-                                        if *char == '*' {
-                                            count += 1;
-                                        }
-                                    }
-                                    None => {}
-                                },
-                                None => {}
-                            },
-                            // (Ok(idx_i), Ok(idx_j)) => board_matrix
-                            //                                             .get(idx_i)
-                            //                                             .and_then(get(idx_j)
-                            //                                             .and_then(count += 1),
-                            (_, _) => {}
-                        }
-                    }
-                }
-                counted_row.push(count);
-            }
+            counted_row.push(count_neighbour_mines(&board_matrix, i, j, col));
         }
         count_matrix.push(counted_row);
     }
@@ -69,3 +39,33 @@ fn count_mines(board_matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
     board_matrix
 }
 
+fn count_neighbour_mines(board_matrix: &Vec<Vec<char>>, i: usize, j: usize, col: &char) -> usize {
+    let mut count = 0_usize;
+    if *col == '*' {
+        return 0_usize;
+    } else {
+        for off_i in [-1_isize, 0, 1] {
+            for off_j in [-1_isize, 0, 1] {
+                match (
+                    usize::try_from((i as isize) + off_i),
+                    usize::try_from((j as isize) + off_j),
+                ) {
+                    (Ok(idx_i), Ok(idx_j)) => match board_matrix.get(idx_i) {
+                        Some(visited_row) => match visited_row.get(idx_j) {
+                            Some(char) => {
+                                if *char == '*' {
+                                    count += 1;
+                                }
+                            }
+                            None => {}
+                        },
+                        None => {}
+                    },
+                    (_,_) => {},
+                }
+
+            }
+        }
+    }
+    count
+}
