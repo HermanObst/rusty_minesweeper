@@ -26,7 +26,7 @@ fn process_file(string_file: String) -> Vec<Vec<char>> {
     matrix_file
 }
 
-fn count_mines(board_matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
+fn count_mines(board_matrix: Vec<Vec<char>>) -> Vec<Vec<usize>> {
     let mut count_matrix = Vec::<Vec<usize>>::new();
     for (i, row) in board_matrix.iter().enumerate() {
         let mut counted_row = Vec::new();
@@ -36,7 +36,7 @@ fn count_mines(board_matrix: Vec<Vec<char>>) -> Vec<Vec<char>> {
         count_matrix.push(counted_row);
     }
     println!("{:?}", count_matrix);
-    board_matrix
+    count_matrix
 }
 
 fn count_neighbour_mines(board_matrix: &Vec<Vec<char>>, i: usize, j: usize, col: &char) -> usize {
