@@ -5,7 +5,7 @@ use std::io::Read;
 fn main() -> Result<(), std::io::Error> {
     let string_file = read_file("input.txt")?;
     let matrix_file = process_file(string_file);
-    let matrix = count_mines(matrix_file);
+    let _matrix = count_mines(matrix_file);
     Ok(())
 }
 
@@ -18,7 +18,7 @@ fn read_file(file_path: &str) -> std::io::Result<String> {
 
 fn process_file(string_file: String) -> Vec<Vec<char>> {
     let mut matrix_file = Vec::new();
-    for fila_str in string_file.as_str().split("\n") {
+    for fila_str in string_file.as_str().split('\n') {
         let fila = fila_str.chars().collect::<Vec<char>>();
         matrix_file.push(fila);
     }
@@ -39,7 +39,7 @@ fn count_mines(board_matrix: Vec<Vec<char>>) -> Vec<Vec<usize>> {
     count_matrix
 }
 
-fn count_neighbour_mines(board_matrix: &Vec<Vec<char>>, i: usize, j: usize, col: &char) -> usize {
+fn count_neighbour_mines(board_matrix: &[Vec<char>], i: usize, j: usize, col: &char) -> usize {
     let mut count = 0_usize;
     if *col == '*' {
         return 0_usize;
@@ -50,20 +50,19 @@ fn count_neighbour_mines(board_matrix: &Vec<Vec<char>>, i: usize, j: usize, col:
                     usize::try_from((i as isize) + off_i),
                     usize::try_from((j as isize) + off_j),
                 ) {
-                    (Ok(idx_i), Ok(idx_j)) => match board_matrix.get(idx_i) {
-                        Some(visited_row) => match visited_row.get(idx_j) {
-                            Some(char) => {
-                                if *char == '*' {
-                                    count += 1;
+                    (Ok(idx_i), Ok(idx_j)) => {
+                        if let Some(visited_row) = board_matrix.get(idx_i) {
+                            if let Some(char) = visited_row.get(idx_j) {
+                                {
+                                    if *char == '*' {
+                                        count += 1;
+                                    }
                                 }
                             }
-                            None => {}
-                        },
-                        None => {}
-                    },
-                    (_,_) => {},
+                        }
+                    }
+                    (_, _) => {}
                 }
-
             }
         }
     }
