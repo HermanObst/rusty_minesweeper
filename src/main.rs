@@ -6,6 +6,11 @@ enum Input {
     Mine,
     Empty,
 }
+#[derive(Debug, PartialEq, Eq)]
+enum Output {
+    Mine,
+    Empty(usize),
+}
 
 fn main() -> Result<(), std::io::Error> {
     let string_file = read_file("input.txt")?;
@@ -38,8 +43,8 @@ fn process_file(string_file: &str) -> Vec<Vec<Input>> {
     matrix_file
 }
 
-fn count_mines(board_matrix: &[Vec<Input>]) -> Vec<Vec<usize>> {
-    let mut count_matrix = Vec::<Vec<usize>>::new();
+fn count_mines(board_matrix: &[Vec<Input>]) -> Vec<Vec<Output>> {
+    let mut count_matrix = Vec::<Vec<Output>>::new();
     for (i, row) in board_matrix.iter().enumerate() {
         let mut counted_row = Vec::new();
         for (j, col) in row.iter().enumerate() {
@@ -50,28 +55,26 @@ fn count_mines(board_matrix: &[Vec<Input>]) -> Vec<Vec<usize>> {
     count_matrix
 }
 
-fn count_neighbour_mines(board_matrix: &[Vec<Input>], i: usize, j: usize, col: &Input) -> usize {
+fn count_neighbour_mines(board_matrix: &[Vec<Input>], i: usize, j: usize, col: &Input) -> Output {
     let i = isize::try_from(i).unwrap_or(std::isize::MAX);
     let j = isize::try_from(j).unwrap_or(std::isize::MAX);
     let mut count = 0;
     if let Input::Mine = col {
-        return 0;
+        return Output::Mine;
     }
     for off_i in [-1_isize, 0, 1] {
         for off_j in [-1_isize, 0, 1] {
             if let (Ok(idx_i), Ok(idx_j)) = (usize::try_from(i + off_i), usize::try_from(j + off_j))
             {
                 if let Some(visited_row) = board_matrix.get(idx_i) {
-                    if let Some(char) = visited_row.get(idx_j) {
+                    if let Some(Input::Mine) = visited_row.get(idx_j) {
                         {
-                            if let Input::Mine = char {
-                                count += 1;
-                            }
+                            count += 1;
                         }
                     }
                 }
             }
         }
     }
-    count
+    Output::Empty(count)
 }
