@@ -1,22 +1,16 @@
+mod output;
+mod input;
 use std::convert::TryFrom;
 use std::fs::File;
 use std::io::Read;
-
-enum Input {
-    Mine,
-    Empty,
-}
-#[derive(Debug, PartialEq, Eq)]
-enum Output {
-    Mine,
-    Empty(usize),
-}
+use output::Output;
+use input::Input;
 
 fn main() -> Result<(), std::io::Error> {
     let string_file = read_file("input.txt")?;
     let matrix_file = process_file(&string_file);
     let matrix_counted = count_mines(&matrix_file);
-    println!("{:?}", matrix_counted);
+    print_board(&matrix_counted);
     Ok(())
 }
 
@@ -77,4 +71,13 @@ fn count_neighbour_mines(board_matrix: &[Vec<Input>], i: usize, j: usize, col: &
         }
     }
     Output::Empty(count)
+}
+
+fn print_board(counted_board: &[Vec<Output>]) {
+    for row in counted_board {
+        for cell in row {
+            print!("{}", cell);
+        }
+        println!();
+    }
 }
