@@ -8,6 +8,7 @@ use input::Input;
 
 fn main() -> Result<(), std::io::Error> {
     let string_file = read_file("input.txt")?;
+    println!("{:?}", string_file);
     let matrix_file = process_file(&string_file);
     let matrix_counted = count_mines(&matrix_file);
     print_board(&matrix_counted);
@@ -79,5 +80,16 @@ fn print_board(counted_board: &[Vec<Output>]) {
             print!("{}", cell);
         }
         println!();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_file_reading() {
+        let result = read_file("input.txt").unwrap();
+        assert_eq!(result, "·*·*·\n··*··\n··*··\n·····\n");
     }
 }
