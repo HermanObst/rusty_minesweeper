@@ -1,14 +1,13 @@
-mod output;
 mod input;
+mod output;
+use input::Input;
+use output::Output;
 use std::convert::TryFrom;
 use std::fs::File;
 use std::io::Read;
-use output::Output;
-use input::Input;
 
 fn main() -> Result<(), std::io::Error> {
-    let string_file = read_file("input.txt")?;
-    println!("{:?}", string_file);
+    let string_file = read_file("input_test.txt")?;
     let matrix_file = process_file(&string_file);
     let matrix_counted = count_mines(&matrix_file);
     print_board(&matrix_counted);
@@ -91,5 +90,124 @@ mod tests {
     fn test_file_reading() {
         let result = read_file("input.txt").unwrap();
         assert_eq!(result, "·*·*·\n··*··\n··*··\n·····\n");
+    }
+
+    #[test]
+    fn test_process_file() {
+        let processed_file = process_file("·*·*·\n··*··\n··*··\n·····\n");
+        let result = [
+            [
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+            ],
+            [
+                Input::Empty,
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+                Input::Empty,
+            ],
+            [
+                Input::Empty,
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+                Input::Empty,
+            ],
+            [
+                Input::Empty,
+                Input::Empty,
+                Input::Empty,
+                Input::Empty,
+                Input::Empty,
+            ],
+        ];
+        assert_eq!(processed_file, result);
+    }
+
+    #[test]
+    fn test_count_mines() {
+        let input = [
+            vec![
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+            ],
+            vec![
+                Input::Empty,
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+                Input::Empty,
+            ],
+            vec![
+                Input::Empty,
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+                Input::Empty,
+            ],
+            vec![
+                Input::Empty,
+                Input::Empty,
+                Input::Empty,
+                Input::Empty,
+                Input::Empty,
+            ],
+        ];
+        let output = count_mines(&input);
+        let expected_output = vec![
+            vec![
+                Output::Empty(1),
+                Output::Mine,
+                Output::Empty(3),
+                Output::Mine,
+                Output::Empty(1),
+            ],
+            vec![
+                Output::Empty(1),
+                Output::Empty(3),
+                Output::Mine,
+                Output::Empty(3),
+                Output::Empty(1),
+            ],
+            vec![
+                Output::Empty(0),
+                Output::Empty(2),
+                Output::Mine,
+                Output::Empty(2),
+                Output::Empty(0),
+            ],
+            vec![
+                Output::Empty(0),
+                Output::Empty(1),
+                Output::Empty(1),
+                Output::Empty(1),
+                Output::Empty(0),
+            ],
+        ];
+        assert_eq!(output, expected_output);
+    }
+
+    fn test_count_neighbour_mines() {
+        board_matrix = [
+            vec![
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+            ],
+            vec![
+                Input::Empty,
+                Input::Mine,
+                Input::Empty,
+            ]
+        ]
+        todo!();
+
     }
 }
