@@ -7,7 +7,7 @@ use std::fs::File;
 use std::io::Read;
 
 fn main() -> Result<(), std::io::Error> {
-    let string_file = read_file("input_test.txt")?;
+    let string_file = read_file("input.txt")?;
     let matrix_file = process_file(&string_file);
     let matrix_counted = count_mines(&matrix_file);
     print_board(&matrix_counted);
@@ -194,8 +194,9 @@ mod tests {
         assert_eq!(output, expected_output);
     }
 
+    #[test]
     fn test_count_neighbour_mines() {
-        board_matrix = [
+        let board_matrix = vec![
             vec![
                 Input::Empty,
                 Input::Mine,
@@ -205,9 +206,55 @@ mod tests {
                 Input::Empty,
                 Input::Mine,
                 Input::Empty,
+            ],
+            vec![
+                Input::Empty,
+                Input::Empty,
+                Input::Empty,
             ]
-        ]
-        todo!();
+        ];
+        let output_1 = count_neighbour_mines(&board_matrix, 1, 0, &board_matrix[1][0]);
+        let output_2 = count_neighbour_mines(&board_matrix, 1, 1, &board_matrix[1][1]);
+        assert_eq!(output_1, Output::Empty(2));
+        assert_eq!(output_2, Output::Mine);
 
+    }
+
+    #[test]
+    fn integration_test() {
+        let string_file = read_file("input.txt").unwrap();
+        let matrix_file = process_file(&string_file);
+        let matrix_counted = count_mines(&matrix_file); 
+        let expected_output = vec![
+            vec![
+                Output::Empty(1),
+                Output::Mine,
+                Output::Empty(3),
+                Output::Mine,
+                Output::Empty(1),
+            ],
+            vec![
+                Output::Empty(1),
+                Output::Empty(3),
+                Output::Mine,
+                Output::Empty(3),
+                Output::Empty(1),
+            ],
+            vec![
+                Output::Empty(0),
+                Output::Empty(2),
+                Output::Mine,
+                Output::Empty(2),
+                Output::Empty(0),
+            ],
+            vec![
+                Output::Empty(0),
+                Output::Empty(1),
+                Output::Empty(1),
+                Output::Empty(1),
+                Output::Empty(0),
+            ],
+        ];
+        assert_eq!(matrix_counted, expected_output); 
     }
 }
