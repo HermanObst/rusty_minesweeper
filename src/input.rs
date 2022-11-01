@@ -1,5 +1,8 @@
 use std::fmt;
 
+// The input type represent the minesweeper board.
+// Input::Mine represent a cell that contains a mine.
+// Input::Empty represent an empty cell.
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Input {
     Mine,

@@ -1,5 +1,8 @@
 use std::fmt;
 
+// The output type represent the already processed minesweeper board
+// Output::Mine represent a cell that contains a mine.
+// Output::Empty(n) represent an empty cell with n mines as neighbours.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Output {
     Mine,
