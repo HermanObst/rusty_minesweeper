@@ -14,6 +14,7 @@ fn main() -> Result<(), std::io::Error> {
     Ok(())
 }
 
+// reads a file containing a board and convers it to a String.
 fn read_file(file_path: &str) -> std::io::Result<String> {
     let mut file = File::open(file_path)?;
     let mut contents = String::new();
@@ -21,6 +22,8 @@ fn read_file(file_path: &str) -> std::io::Result<String> {
     Ok(contents)
 }
 
+// Given a string containing the information of the board
+// Construct a matix of type Input.
 fn process_file(string_file: &str) -> Vec<Vec<Input>> {
     let mut matrix_file = Vec::new();
     for fila_str in string_file.split('\n') {
@@ -37,6 +40,7 @@ fn process_file(string_file: &str) -> Vec<Vec<Input>> {
     matrix_file
 }
 
+// Given a matrix of Input, returns a matrix of Output
 fn count_mines(board_matrix: &[Vec<Input>]) -> Vec<Vec<Output>> {
     let mut count_matrix = Vec::<Vec<Output>>::new();
     for (i, row) in board_matrix.iter().enumerate() {
@@ -49,6 +53,10 @@ fn count_mines(board_matrix: &[Vec<Input>]) -> Vec<Vec<Output>> {
     count_matrix
 }
 
+// Given a specific cell of the board matrix
+// Iterates over all its neighbours and returns an Output type of:
+// - The number of mines around that cell, if the cell is empty
+// - The type Output. 
 fn count_neighbour_mines(board_matrix: &[Vec<Input>], i: usize, j: usize, col: &Input) -> Output {
     let i = isize::try_from(i).unwrap_or(std::isize::MAX);
     let j = isize::try_from(j).unwrap_or(std::isize::MAX);
@@ -73,6 +81,7 @@ fn count_neighbour_mines(board_matrix: &[Vec<Input>], i: usize, j: usize, col: &
     Output::Empty(count)
 }
 
+// Prints the matrix of outputs
 fn print_board(counted_board: &[Vec<Output>]) {
     for row in counted_board {
         for cell in row {
